@@ -20,34 +20,31 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-          cache: gradle
+
+      - name: Extract project
+        run: |
+          mkdir -p project
+          unzip -o base-finder-pro-starter.zip -d project
+
+      - name: Show project files
+        run: |
+          find project -maxdepth 4 -type f | head -100
 
       - name: Install Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.14.3'
-
-      - name: Extract source ZIP
-        run: |
-          mkdir -p project
-          unzip -o base-finder-pro-starter.zip -d project
-
-      - name: Verify project files
-        run: |
-          test -f project/settings.gradle
-          test -f project/build.gradle
-          test -f project/src/main/resources/fabric.mod.json
+          cache-disabled: true
 
       - name: Build mod
         working-directory: project
-        run: gradle build --stacktrace
+        run: gradle build --no-daemon --stacktrace
 
-      - name: Upload build results
-        if: always()
+      - name: Upload JAR
+        if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: base-finder-pro-build
-          path: |
-            project/build/libs/*.jar
-          if-no-files-found: warn
+          name: base-finder-pro-jar
+          path: project/build/libs/*.jar
+
 
