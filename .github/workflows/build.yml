@@ -1,4 +1,3 @@
-
 name: Build Base Finder Pro
 
 on:
@@ -26,14 +25,10 @@ jobs:
           mkdir -p project
           unzip -o base-finder-pro-starter.zip -d project
 
-      - name: Show project files
-        run: |
-          find project -maxdepth 4 -type f | head -100
-
       - name: Install Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.14.3'
+          gradle-version: '9.2.0'
           cache-disabled: true
 
       - name: Build mod
